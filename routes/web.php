@@ -25,27 +25,23 @@ Route::post('/attendance/check-out', [AttendanceController::class, 'quickCheckOu
 Route::get('/asset-loan', [AssetAssignmentController::class, 'publicForm'])->name('asset.public.loan');
 Route::post('/asset-loan', [AssetAssignmentController::class, 'publicStore'])->name('asset.public.loan.store');
 
-// Include route files for modular routes (auth only)
+// Protected routes
 Route::middleware('auth')->group(function () {
     require __DIR__.'/hr.php';
     require __DIR__.'/asset.php';
     require __DIR__.'/program.php';
-});
 
-// Calendar
-Route::middleware('auth')->group(function () {
+    // Calendar
     Route::get('/calendar', function () {
         return view('pages.calender', ['title' => 'Calendar']);
     })->name('calendar');
 
-// Profile
-Route::middleware('auth')->group(function () {
+    // Profile
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/account-settings', [ProfileController::class, 'show'])->name('account-settings');
     Route::get('/anggota/mandiri', [MemberSelfServiceController::class, 'index'])->name('member.self-service');
     Route::post('/anggota/mandiri/{memberId}', [MemberSelfServiceController::class, 'update'])->name('member.self-service.update');
-});
 
     // Form pages
     Route::get('/form-elements', function () {
@@ -76,22 +72,6 @@ Route::middleware('auth')->group(function () {
         return view('pages.chart.bar-chart', ['title' => 'Bar Chart']);
     })->name('bar-chart');
 
-// Authentication pages
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Admin - User Management (Super Admin only)
-Route::prefix('admin')->name('admin.')->middleware('role:Super Admin')->group(function () {
-    Route::resource('users', UserController::class)->parameters([
-        'users' => 'id'
-    ])->whereNumber('id');
-});
-
-Route::get('/register', function () {
-    return view('pages.auth.register', ['title' => 'Register']);
-})->name('register');
-
     // UI elements pages
     Route::get('/alerts', function () {
         return view('pages.ui-elements.alerts', ['title' => 'Alerts']);
@@ -117,3 +97,19 @@ Route::get('/register', function () {
         return view('pages.ui-elements.videos', ['title' => 'Videos']);
     })->name('videos');
 });
+
+// Authentication pages
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Admin - User Management (Super Admin only)
+Route::prefix('admin')->name('admin.')->middleware('role:Super Admin')->group(function () {
+    Route::resource('users', UserController::class)->parameters([
+        'users' => 'id'
+    ])->whereNumber('id');
+});
+
+Route::get('/register', function () {
+    return view('pages.auth.register', ['title' => 'Register']);
+})->name('register');
