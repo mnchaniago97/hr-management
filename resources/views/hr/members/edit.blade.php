@@ -52,27 +52,13 @@
           <!-- NIA -->
           <div>
             <label for="nia" class="mb-2 block text-sm font-medium text-black dark:text-white">
-              NIA
+              NIA <span class="text-red-500">*</span>
             </label>
             <input 
               type="text" 
               id="nia" 
               name="nia" 
               value="{{ old('nia', $member->profile->nia ?? '') }}"
-              class="w-full rounded border border-gray-300 bg-white px-4 py-2 text-black focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-boxdark dark:text-white"
-            >
-          </div>
-
-          <!-- Email -->
-          <div>
-            <label for="email" class="mb-2 block text-sm font-medium text-black dark:text-white">
-              Email <span class="text-red-500">*</span>
-            </label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              value="{{ old('email', $member->email) }}"
               class="w-full rounded border border-gray-300 bg-white px-4 py-2 text-black focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-boxdark dark:text-white"
               required
             >
@@ -108,16 +94,15 @@
           <!-- Tipe Anggota -->
           <div>
             <label for="member_type" class="mb-2 block text-sm font-medium text-black dark:text-white">
-              Tipe Anggota <span class="text-red-500">*</span>
+              Tipe Anggota
             </label>
             <select 
               id="member_type" 
               name="member_type" 
               class="w-full rounded border border-gray-300 bg-white px-4 py-2 text-black focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-boxdark dark:text-white"
-              required
             >
               <option value="">Pilih Tipe Anggota</option>
-              <option value="AM" {{ old('member_type', $member->member_type) == 'AM' ? 'selected' : '' }}>Anggota Muda (AM)</option>
+              <option value="AM" {{ old('member_type', $member->member_type ?? 'AM') == 'AM' ? 'selected' : '' }}>Anggota Muda (AM)</option>
               <option value="AT" {{ old('member_type', $member->member_type) == 'AT' ? 'selected' : '' }}>Anggota Tetap (AT)</option>
               <option value="Alumni" {{ old('member_type', $member->member_type) == 'Alumni' ? 'selected' : '' }}>Alumni</option>
             </select>
@@ -140,7 +125,7 @@
           <!-- Jabatan -->
           <div>
             <label for="position" class="mb-2 block text-sm font-medium text-black dark:text-white">
-              Jabatan <span class="text-red-500">*</span>
+              Jabatan
             </label>
             <input 
               type="text" 
@@ -148,14 +133,13 @@
               name="position" 
               value="{{ old('position', $member->position) }}"
               class="w-full rounded border border-gray-300 bg-white px-4 py-2 text-black focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-boxdark dark:text-white"
-              required
             >
           </div>
 
           <!-- Departemen -->
           <div>
             <label for="department" class="mb-2 block text-sm font-medium text-black dark:text-white">
-              Departemen <span class="text-red-500">*</span>
+              Departemen
             </label>
             <input 
               type="text" 
@@ -163,35 +147,18 @@
               name="department" 
               value="{{ old('department', $member->department) }}"
               class="w-full rounded border border-gray-300 bg-white px-4 py-2 text-black focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-boxdark dark:text-white"
-              required
-            >
-          </div>
-
-          <!-- Tanggal Gabung -->
-          <div>
-            <label for="join_date" class="mb-2 block text-sm font-medium text-black dark:text-white">
-              Tanggal Gabung <span class="text-red-500">*</span>
-            </label>
-            <input 
-              type="date" 
-              id="join_date" 
-              name="join_date" 
-              value="{{ old('join_date', $member->join_date ? $member->join_date->format('Y-m-d') : '') }}"
-              class="w-full rounded border border-gray-300 bg-white px-4 py-2 text-black focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-boxdark dark:text-white"
-              required
             >
           </div>
 
           <!-- Status -->
           <div>
             <label for="status" class="mb-2 block text-sm font-medium text-black dark:text-white">
-              Status <span class="text-red-500">*</span>
+              Status
             </label>
             <select 
               id="status" 
               name="status" 
               class="w-full rounded border border-gray-300 bg-white px-4 py-2 text-black focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-600 dark:bg-boxdark dark:text-white"
-              required
             >
               <option value="">Pilih Status</option>
               <option value="active" {{ old('status', $member->status) == 'active' ? 'selected' : '' }}>Aktif</option>

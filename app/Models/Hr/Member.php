@@ -5,6 +5,7 @@ namespace App\Models\Hr;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Member extends Model
@@ -25,11 +26,9 @@ class Member extends Model
      */
     protected $fillable = [
         'name',
-        'email',
         'phone',
         'position',
         'department',
-        'join_date',
         'status',
         'photo',
         'member_type',
@@ -43,7 +42,6 @@ class Member extends Model
     protected function casts(): array
     {
         return [
-            'join_date' => 'date',
         ];
     }
 
@@ -74,9 +72,16 @@ class Member extends Model
     /**
      * Get the training participants for the member.
      */
-    public function trainingParticipants(): HasMany
+    public function trainingParticipants(): HasManyThrough
     {
-        return $this->hasMany(\App\Models\Program\TrainingParticipant::class);
+        return $this->hasManyThrough(
+            \App\Models\Program\TrainingParticipant::class,
+            Employee::class,
+            'member_id',
+            'employee_id',
+            'id',
+            'id'
+        );
     }
 
     /**

@@ -19,9 +19,8 @@
           <h3 class="mb-4 text-lg font-semibold text-black dark:text-white">Informasi Pribadi</h3>
           <div class="space-y-3">
             <div class="flex justify-between"><span class="text-sm text-gray-500">Nama</span><span class="font-medium">{{ $member->name }}</span></div>
-            <div class="flex justify-between"><span class="text-sm text-gray-500">Email</span><span class="font-medium">{{ $member->email }}</span></div>
+            <div class="flex justify-between"><span class="text-sm text-gray-500">Email</span><span class="font-medium">-</span></div>
             <div class="flex justify-between"><span class="text-sm text-gray-500">Telepon</span><span class="font-medium">{{ $member->phone ?? '-' }}</span></div>
-            <div class="flex justify-between"><span class="text-sm text-gray-500">Tanggal Gabung</span><span class="font-medium">{{ $member->join_date }}</span></div>
           </div>
         </div>
 

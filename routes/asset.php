@@ -17,7 +17,7 @@ use App\Http\Controllers\Asset\MaintenanceController;
 |
 */
 
-Route::prefix('asset')->name('asset.')->group(function () {
+Route::prefix('asset')->name('asset.')->middleware('permission:asset.access')->group(function () {
     // Categories - /asset/categories
     Route::resource('categories', AssetCategoryController::class)->parameters([
         'categories' => 'id'

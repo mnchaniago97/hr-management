@@ -9,15 +9,15 @@
 }" @click.away="closeDropdown()">
     <!-- User Button -->
     <button
-        class="flex items-center text-gray-700 dark:text-gray-400"
+        class="flex items-center gap-3 rounded-full border border-gray-200 bg-white px-2 py-1.5 text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
         @click.prevent="toggleDropdown()"
         type="button"
     >
-        <span class="mr-3 overflow-hidden rounded-full h-11 w-11">
-            <img src="/images/user/owner.png" alt="User" />
+        <span class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gray-100 text-sm font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+            {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 2)) }}
         </span>
 
-       <span class="block mr-1 font-medium text-theme-sm">Musharof</span>
+       <span class="block mr-1 font-medium text-theme-sm">{{ auth()->user()->name ?? 'User' }}</span>
 
         <!-- Chevron Icon -->
         <svg
@@ -45,8 +45,13 @@
     >
         <!-- User Info -->
         <div>
-            <span class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">Musharof Chowdhury</span>
-            <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">randomuser@pimjo.com</span>
+            <span class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">{{ auth()->user()->name ?? 'User' }}</span>
+            <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">{{ auth()->user()->email ?? '-' }}</span>
+            @if(auth()->user())
+                <span class="mt-1 inline-flex rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase text-blue-700 dark:bg-blue-500/15 dark:text-blue-400">
+                    {{ auth()->user()->role ?? 'User' }}
+                </span>
+            @endif
         </div>
 
         <!-- Menu Items -->
@@ -54,7 +59,7 @@
             @php
                 $menuItems = [
                     [
-                        'text' => 'Edit profile',
+                        'text' => 'Detail Profil',
                         'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 fill-rule="evenodd"
@@ -63,10 +68,10 @@
                                 fill="currentColor"
                             />
                         </svg>',
-                        'path' => 'profile',
+                        'path' => route('profile'),
                     ],
                     [
-                        'text' => 'Account settings',
+                        'text' => 'Account Settings',
                         'icon' => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                            <path
                             fill-rule="evenodd"
@@ -75,7 +80,8 @@
                             fill="currentColor"
                         />
                         </svg>',
-                        'path' => 'chat'
+                        'path' => route('account-settings'),
+                        'action' => 'open-profile-info-modal',
                     ],
                     [
                         'text' => 'Support',
@@ -87,31 +93,44 @@
                             fill="currentColor"
                           />
                         </svg>',
-                        'path' => 'profile'
+                        'path' => route('profile')
                     ],
                 ];
             @endphp
 
             @foreach ($menuItems as $item)
                 <li>
-                    <a
-                        href="{{ $item['path'] }}"
-                        class="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                    >
-                        <span class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
-                            {!! $item['icon'] !!}
-                        </span>
-                        {{ $item['text'] }}
-                    </a>
+                    @if (!empty($item['action']))
+                        <button
+                            type="button"
+                            @click="$dispatch('{{ $item['action'] }}'); closeDropdown()"
+                            class="flex w-full items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                        >
+                            <span class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                                {!! $item['icon'] !!}
+                            </span>
+                            {{ $item['text'] }}
+                        </button>
+                    @else
+                        <a
+                            href="{{ $item['path'] }}"
+                            class="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                        >
+                            <span class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                                {!! $item['icon'] !!}
+                            </span>
+                            {{ $item['text'] }}
+                        </a>
+                    @endif
                 </li>
             @endforeach
         </ul>
 
         <!-- Sign Out -->
-        {{-- <form method="POST" action="#">
-            @csrf --}}
-            <a
-                href="/signin"
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button
+                type="submit"
                 class="flex items-center w-full gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
                 @click="closeDropdown()"
             >
@@ -121,8 +140,8 @@
                     </svg>
                 </span>
                 Sign out
-            </a>
-        {{-- </form> --}}
+            </button>
+        </form>
     </div>
     <!-- Dropdown End -->
 </div>

@@ -36,8 +36,6 @@
           </div>
 
           <div>
-            <label for="email" class="mb-2 block text-sm font-medium text-black dark:text-white">Email <span class="text-red-500">*</span></label>
-            <input type="email" name="email" value="{{ old('email') }}" class="w-full rounded border border-gray-300 bg-white px-4 py-2 dark:border-gray-600 dark:bg-boxdark dark:text-white" required>
           </div>
 
           <div>
@@ -55,10 +53,6 @@
             <input type="text" name="department" value="{{ old('department') }}" class="w-full rounded border border-gray-300 bg-white px-4 py-2 dark:border-gray-600 dark:bg-boxdark dark:text-white" required>
           </div>
 
-          <div>
-            <label for="join_date" class="mb-2 block text-sm font-medium text-black dark:text-white">Tanggal Gabung <span class="text-red-500">*</span></label>
-            <input type="date" name="join_date" value="{{ old('join_date') }}" class="w-full rounded border border-gray-300 bg-white px-4 py-2 dark:border-gray-600 dark:bg-boxdark dark:text-white" required>
-          </div>
 
           <div>
             <label for="status" class="mb-2 block text-sm font-medium text-black dark:text-white">Status <span class="text-red-500">*</span></label>

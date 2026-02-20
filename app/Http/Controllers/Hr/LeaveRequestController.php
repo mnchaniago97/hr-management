@@ -28,7 +28,7 @@ class LeaveRequestController extends Controller
         if ($search) {
             $query->whereHas('member', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                  ->orWhere('position', 'like', "%{$search}%");
             });
         }
 

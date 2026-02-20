@@ -27,7 +27,7 @@ class AttendanceController extends Controller
         if ($search) {
             $query->whereHas('member', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                  ->orWhere('position', 'like', "%{$search}%");
             });
         }
 
@@ -108,9 +108,9 @@ class AttendanceController extends Controller
     /**
      * Display the specified attendance.
      */
-    public function show(int $id): View
+    public function show(int|string $id): View
     {
-        $attendance = Attendance::with('member')->findOrFail($id);
+        $attendance = Attendance::with('member')->findOrFail((int) $id);
 
         return view('hr.attendances.show', compact('attendance'));
     }
@@ -118,9 +118,9 @@ class AttendanceController extends Controller
     /**
      * Remove the specified attendance from storage.
      */
-    public function destroy(int $id): RedirectResponse
+    public function destroy(int|string $id): RedirectResponse
     {
-        $attendance = Attendance::findOrFail($id);
+        $attendance = Attendance::findOrFail((int) $id);
         $attendance->delete();
 
         return redirect()->route('hr.attendances.index')

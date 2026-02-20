@@ -23,7 +23,6 @@
             <div class="h-12 w-12 rounded-full bg-gray-100"></div>
             <div>
               <p class="text-sm font-semibold text-gray-800 dark:text-white/90">{{ $member->name }}</p>
-              <p class="text-xs text-gray-500">{{ $member->email }}</p>
             </div>
           </div>
           <div class="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-500">

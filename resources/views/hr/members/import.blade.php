@@ -54,7 +54,7 @@
         <div>
           <label class="mb-2 block text-sm font-medium text-black dark:text-white">File Excel <span class="text-red-500">*</span></label>
           <input type="file" name="file" accept=".xls,.xlsx,.csv" required>
-          <p class="mt-2 text-xs text-gray-500">Kolom wajib: name, email, position, department, join_date. Opsional: phone, status, member_type, nia.</p>
+          <p class="mt-2 text-xs text-gray-500">Kolom wajib: name, nia. Opsional: phone, position, department, status, member_type.</p>
         </div>
         <div class="flex justify-end gap-3">
           <a href="{{ route('hr.members.index') }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]">

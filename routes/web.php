@@ -5,6 +5,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SidebarController;
 use App\Http\Controllers\Hr\AttendanceController;
 use App\Http\Controllers\Asset\AssetAssignmentController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Hr\MemberSelfServiceController;
 
 // Dashboard
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -30,9 +34,13 @@ Route::get('/calendar', function () {
 })->name('calendar');
 
 // Profile
-Route::get('/profile', function () {
-    return view('pages.profile', ['title' => 'Profile']);
-})->name('profile');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/account-settings', [ProfileController::class, 'show'])->name('account-settings');
+    Route::get('/anggota/mandiri', [MemberSelfServiceController::class, 'index'])->name('member.self-service');
+    Route::post('/anggota/mandiri/{memberId}', [MemberSelfServiceController::class, 'update'])->name('member.self-service.update');
+});
 
 // Form pages
 Route::get('/form-elements', function () {
@@ -64,9 +72,16 @@ Route::get('/bar-chart', function () {
 })->name('bar-chart');
 
 // Authentication pages
-Route::get('/signin', function () {
-    return view('pages.auth.signin', ['title' => 'Sign In']);
-})->name('signin');
+Route::get('/signin', [AuthController::class, 'showLogin'])->name('signin');
+Route::post('/signin', [AuthController::class, 'login'])->name('signin.submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Admin - User Management (Super Admin only)
+Route::prefix('admin')->name('admin.')->middleware('role:Super Admin')->group(function () {
+    Route::resource('users', UserController::class)->parameters([
+        'users' => 'id'
+    ])->whereNumber('id');
+});
 
 Route::get('/signup', function () {
     return view('pages.auth.signup', ['title' => 'Sign Up']);

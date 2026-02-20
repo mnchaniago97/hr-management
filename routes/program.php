@@ -21,7 +21,7 @@ use App\Http\Controllers\Program\TrainingParticipantController;
 |
 */
 
-Route::prefix('program')->name('program.')->group(function () {
+Route::prefix('program')->name('program.')->middleware('permission:program.access')->group(function () {
     // Periods - /program/periods
     Route::resource('periods', PeriodController::class)->parameters([
         'periods' => 'id'

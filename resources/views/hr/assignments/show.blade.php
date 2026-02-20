@@ -32,10 +32,6 @@
               <a href="{{ route('hr.members.show', $assignment->member->id) }}" class="font-medium text-primary hover:underline">{{ $assignment->member->name }}</a>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Email</span>
-              <span class="font-medium text-black dark:text-white">{{ $assignment->member->email }}</span>
-            </div>
-            <div class="flex justify-between">
               <span class="text-sm text-gray-500 dark:text-gray-400">Divisi</span>
               <span class="font-medium text-black dark:text-white">{{ $assignment->division->name ?? '-' }}</span>
             </div>

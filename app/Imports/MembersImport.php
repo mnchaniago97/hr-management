@@ -14,7 +14,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
-use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 class MembersImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsOnFailure, SkipsEmptyRows, WithBatchInserts, WithChunkReading
 {
@@ -24,48 +23,65 @@ class MembersImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsO
     {
         $data = $row->toArray();
 
-        $joinDate = $this->parseDate($data['join_date'] ?? null);
-        $status = strtolower(trim((string) ($data['status'] ?? 'active'))) ?: 'active';
+        $name = trim((string) ($data['name'] ?? ''));
+        $nia = trim((string) ($data['nia'] ?? ''));
 
-        $member = Member::create([
-            'name' => trim((string) ($data['name'] ?? '')),
-            'email' => trim((string) ($data['email'] ?? '')),
-            'phone' => $data['phone'] ?? null,
+        if ($name === '' || $nia === '') {
+            return;
+        }
+
+        $status = strtolower(trim((string) ($data['status'] ?? 'active'))) ?: 'active';
+        $phone = $this->normalizePhone($data['phone'] ?? null);
+
+        $memberType = $data['member_type'] ?? null;
+        if ($memberType === null || trim((string) $memberType) === '') {
+            $memberType = 'AM';
+        }
+
+        $memberData = [
+            'name' => $name,
+            'phone' => $phone,
             'position' => trim((string) ($data['position'] ?? '')),
             'department' => trim((string) ($data['department'] ?? '')),
-            'join_date' => $joinDate,
             'status' => $status,
-            'member_type' => $data['member_type'] ?? null,
-        ]);
+            'member_type' => $memberType,
+        ];
 
-        $nia = $data['nia'] ?? null;
-        if ($nia !== null && $nia !== '') {
-            Employee::updateOrCreate(
-                ['member_id' => $member->id],
-                ['nia' => trim((string) $nia), 'status' => $status]
-            );
+        $employee = Employee::where('nia', $nia)->first();
+        if ($employee) {
+            $member = Member::find($employee->member_id);
+            if ($member) {
+                $member->update($memberData);
+            } else {
+                $member = Member::create($memberData);
+                $employee->update(['member_id' => $member->id, 'status' => $status]);
+            }
+        } else {
+            $member = Member::create($memberData);
+            Employee::create([
+                'member_id' => $member->id,
+                'nia' => $nia,
+                'status' => $status,
+            ]);
         }
     }
 
     public function rules(): array
     {
         return [
-            '*.name' => 'required|string|max:255',
-            '*.email' => 'required|email|unique:hr_members,email',
-            '*.phone' => 'nullable|string|max:20',
-            '*.position' => 'required|string|max:255',
-            '*.department' => 'required|string|max:255',
-            '*.join_date' => 'required|date',
+            '*.name' => 'nullable|string|max:255',
+            '*.phone' => 'nullable|max:20',
+            '*.position' => 'nullable|string|max:255',
+            '*.department' => 'nullable|string|max:255',
             '*.status' => ['nullable', Rule::in(['active', 'inactive', 'on_leave', 'terminated'])],
             '*.member_type' => 'nullable|string|max:50',
-            '*.nia' => 'nullable|string|max:50|unique:hr_employees,nia',
+            '*.nia' => 'nullable|string|max:50',
         ];
     }
 
     public function prepareForValidation(array $data, int $index): array
     {
         $data['status'] = strtolower(trim((string) ($data['status'] ?? 'active')));
-        $data['join_date'] = $this->parseDate($data['join_date'] ?? null);
 
         return $data;
     }
@@ -73,15 +89,7 @@ class MembersImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsO
     public function customValidationMessages(): array
     {
         return [
-            '*.name.required' => 'Nama wajib diisi.',
-            '*.email.required' => 'Email wajib diisi.',
-            '*.email.unique' => 'Email sudah digunakan.',
-            '*.position.required' => 'Posisi wajib diisi.',
-            '*.department.required' => 'Departemen wajib diisi.',
-            '*.join_date.required' => 'Tanggal gabung wajib diisi.',
-            '*.join_date.date' => 'Tanggal gabung tidak valid.',
             '*.status.in' => 'Status harus salah satu: active, inactive, on_leave, terminated.',
-            '*.nia.unique' => 'NIA sudah digunakan.',
         ];
     }
 
@@ -95,20 +103,17 @@ class MembersImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsO
         return 500;
     }
 
-    private function parseDate(mixed $value): ?string
+    private function normalizePhone(mixed $value): ?string
     {
         if ($value === null || $value === '') {
             return null;
         }
 
-        if (is_numeric($value)) {
-            return ExcelDate::excelToDateTimeObject($value)->format('Y-m-d');
-        }
-
-        try {
-            return date('Y-m-d', strtotime((string) $value));
-        } catch (\Throwable $e) {
+        $phone = trim((string) $value);
+        if ($phone === '') {
             return null;
         }
+
+        return substr($phone, 0, 20);
     }
 }

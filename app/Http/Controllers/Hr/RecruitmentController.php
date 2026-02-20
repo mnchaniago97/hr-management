@@ -22,8 +22,7 @@ class RecruitmentController extends Controller
 
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                $q->where('name', 'like', "%{$search}%");
             });
         }
 
@@ -51,11 +50,9 @@ class RecruitmentController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:hr_members,email',
             'phone' => 'nullable|string|max:20',
             'position' => 'required|string|max:255',
             'department' => 'required|string|max:255',
-            'join_date' => 'required|date',
             'status' => 'required|in:active,inactive,on_leave,terminated',
         ]);
 
@@ -94,11 +91,9 @@ class RecruitmentController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:hr_members,email,' . $id,
             'phone' => 'nullable|string|max:20',
             'position' => 'required|string|max:255',
             'department' => 'required|string|max:255',
-            'join_date' => 'required|date',
             'status' => 'required|in:active,inactive,on_leave,terminated',
         ]);
 
@@ -131,8 +126,7 @@ class RecruitmentController extends Controller
         
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                $q->where('name', 'like', "%{$search}%");
             });
         }
 

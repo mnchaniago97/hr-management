@@ -32,7 +32,7 @@
         <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div>
             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Pencarian</label>
-            <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari nama atau email...">
+            <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari nama...">
           </div>
           <div>
             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Status</label>
@@ -90,7 +90,7 @@
               <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.03]">
                 <td class="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400 sm:px-6">{{ $index + 1 }}</td>
                 <td class="px-5 py-4 text-theme-sm font-medium text-gray-800 dark:text-white/90 sm:px-6">{{ $member->name }}</td>
-                <td class="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400 sm:px-6">{{ $member->email }}</td>
+                <td class="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400 sm:px-6">-</td>
                 <td class="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400 sm:px-6">{{ $member->phone ?? '-' }}</td>
                 <td class="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400 sm:px-6">{{ $member->position ?? '-' }}</td>
                 <td class="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400 sm:px-6">{{ $member->department ?? '-' }}</td>

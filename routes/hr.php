@@ -21,7 +21,7 @@ use App\Http\Controllers\Hr\CertificationController;
 |
 */
 
-Route::prefix('hr')->name('hr.')->group(function () {
+Route::prefix('hr')->name('hr.')->middleware('permission:hr.access')->group(function () {
     // Member utilities
     Route::get('/members/import', fn () => view('hr.members.import'))->name('members.import');
     Route::post('/members/import', [MemberController::class, 'import'])->name('members.import.store');

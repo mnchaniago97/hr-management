@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? 'Dashboard' }} | TailAdmin - Laravel Tailwind CSS Admin Dashboard Template</title>
+    <title>{{ $title ?? 'Dashboard' }} | KSR PMI UNP</title>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -83,10 +83,22 @@
             const theme = savedTheme || systemTheme;
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
-                document.body.classList.add('dark', 'bg-gray-900');
+                if (document.body) {
+                    document.body.classList.add('dark', 'bg-gray-900');
+                } else {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        document.body.classList.add('dark', 'bg-gray-900');
+                    });
+                }
             } else {
                 document.documentElement.classList.remove('dark');
-                document.body.classList.remove('dark', 'bg-gray-900');
+                if (document.body) {
+                    document.body.classList.remove('dark', 'bg-gray-900');
+                } else {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        document.body.classList.remove('dark', 'bg-gray-900');
+                    });
+                }
             }
         })();
     </script>

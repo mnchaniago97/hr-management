@@ -24,10 +24,6 @@
               <a href="{{ route('hr.members.show', $leaveRequest->member->id) }}" class="font-medium text-primary hover:underline">{{ $leaveRequest->member->name }}</a>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Email</span>
-              <span class="font-medium text-black dark:text-white">{{ $leaveRequest->member->email }}</span>
-            </div>
-            <div class="flex justify-between">
               <span class="text-sm text-gray-500 dark:text-gray-400">Tipe Cuti</span>
               <span class="font-medium text-black dark:text-white">
                 @switch($leaveRequest->type)

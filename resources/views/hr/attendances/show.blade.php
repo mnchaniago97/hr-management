@@ -24,10 +24,6 @@
               <a href="{{ route('hr.members.show', $attendance->member->id) }}" class="font-medium text-primary hover:underline">{{ $attendance->member->name }}</a>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Email</span>
-              <span class="font-medium text-black dark:text-white">{{ $attendance->member->email }}</span>
-            </div>
-            <div class="flex justify-between">
               <span class="text-sm text-gray-500 dark:text-gray-400">Tanggal</span>
               <span class="font-medium text-black dark:text-white">{{ $attendance->date }}</span>
             </div>

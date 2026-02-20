@@ -19,6 +19,7 @@ class MemberController extends Controller
     {
         $search = $request->get('search');
         $status = $request->get('status');
+        $memberType = $request->get('member_type');
         $department = $request->get('department');
 
         $query = Member::with('profile');
@@ -26,7 +27,6 @@ class MemberController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('position', 'like', "%{$search}%")
                   ->orWhereHas('profile', function ($q) use ($search) {
                       $q->where('nia', 'like', "%{$search}%");
@@ -35,11 +35,15 @@ class MemberController extends Controller
         }
 
         if ($status) {
-            $query->where('status', $status);
+            $query->where('hr_members.status', $status);
+        }
+
+        if ($memberType) {
+            $query->where('hr_members.member_type', $memberType);
         }
 
         if ($department) {
-            $query->where('department', $department);
+            $query->where('hr_members.department', $department);
         }
 
         if ($request->query('json')) {
@@ -48,10 +52,15 @@ class MemberController extends Controller
             );
         }
 
-        $members = $query->orderBy('created_at', 'desc')->paginate(10);
+        $members = $query
+            ->leftJoin('hr_employees', 'hr_employees.member_id', '=', 'hr_members.id')
+            ->select('hr_members.*')
+            ->orderBy('hr_employees.nia')
+            ->orderBy('hr_members.name')
+            ->paginate(100);
         $departments = Member::distinct()->pluck('department')->filter()->values();
 
-        return view('hr.members.index', compact('members', 'search', 'status', 'department', 'departments'));
+        return view('hr.members.index', compact('members', 'search', 'status', 'memberType', 'department', 'departments'));
     }
 
     /**
@@ -67,15 +76,18 @@ class MemberController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $request->merge([
+            'status' => $request->input('status') ?: null,
+        ]);
+
         $validated = $request->validate([
-            'nia' => 'nullable|string|max:50|unique:hr_employees,nia',
+            'nia' => 'required|string|max:50|unique:hr_employees,nia',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:hr_members,email',
             'phone' => 'nullable|string|max:20',
-            'position' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-            'join_date' => 'required|date',
-            'status' => 'required|in:active,inactive,on_leave,terminated',
+            'position' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'status' => 'nullable|in:active,inactive,on_leave,terminated',
+            'member_type' => 'nullable|in:AM,AT,Alumni',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -86,17 +98,19 @@ class MemberController extends Controller
             $validated['photo'] = $filename;
         }
 
-        $nia = $validated['nia'] ?? null;
+        $nia = $validated['nia'];
         unset($validated['nia']);
+
+        if (!isset($validated['member_type'])) {
+            $validated['member_type'] = 'AM';
+        }
 
         $member = Member::create($validated);
 
-        if ($nia) {
-            \App\Models\Hr\Employee::updateOrCreate(
-                ['member_id' => $member->id],
-                ['nia' => $nia]
-            );
-        }
+        \App\Models\Hr\Employee::updateOrCreate(
+            ['member_id' => $member->id],
+            ['nia' => $nia]
+        );
 
         return redirect()->route('hr.members.index')
             ->with('success', 'Member created successfully.');
@@ -155,15 +169,18 @@ class MemberController extends Controller
     {
         $member = Member::findOrFail((int) $id);
 
+        $request->merge([
+            'status' => $request->input('status') ?: null,
+        ]);
+
         $validated = $request->validate([
-            'nia' => 'nullable|string|max:50|unique:hr_employees,nia,' . (int) $id . ',member_id',
+            'nia' => 'required|string|max:50|unique:hr_employees,nia,' . (int) $id . ',member_id',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:hr_members,email,' . (int) $id,
             'phone' => 'nullable|string|max:20',
-            'position' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-            'join_date' => 'required|date',
-            'status' => 'required|in:active,inactive,on_leave,terminated',
+            'position' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'status' => 'nullable|in:active,inactive,on_leave,terminated',
+            'member_type' => 'nullable|in:AM,AT,Alumni',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -178,17 +195,19 @@ class MemberController extends Controller
             $validated['photo'] = $filename;
         }
 
-        $nia = $validated['nia'] ?? null;
+        $nia = $validated['nia'];
         unset($validated['nia']);
+
+        if (!isset($validated['member_type'])) {
+            $validated['member_type'] = 'AM';
+        }
 
         $member->update($validated);
 
-        if ($nia !== null) {
-            \App\Models\Hr\Employee::updateOrCreate(
-                ['member_id' => $member->id],
-                ['nia' => $nia]
-            );
-        }
+        \App\Models\Hr\Employee::updateOrCreate(
+            ['member_id' => $member->id],
+            ['nia' => $nia]
+        );
 
         return redirect()->route('hr.members.show', (int) $id)
             ->with('success', 'Member updated successfully.');

@@ -12,42 +12,24 @@
     x-data="{
         openSubmenus: {},
         init() {
-            // Auto-open Dashboard menu on page load
-            this.initializeActiveMenus();
+            this.initializeSubmenus();
         },
-        initializeActiveMenus() {
-            const currentPath = '{{ $currentPath }}';
-
+        initializeSubmenus() {
             @foreach ($menuGroups as $groupIndex => $menuGroup)
                 @foreach ($menuGroup['items'] as $itemIndex => $item)
                     @if (isset($item['subItems']))
-                        // Check if any submenu item matches current path
-                        @foreach ($item['subItems'] as $subItem)
-                            if (currentPath === '{{ ltrim($subItem['path'], '/') }}' ||
-                                window.location.pathname === '{{ $subItem['path'] }}') {
-                                this.openSubmenus['{{ $groupIndex }}-{{ $itemIndex }}'] = true;
-                            } @endforeach
-            @endif
-            @endforeach
+                        this.openSubmenus['{{ $groupIndex }}-{{ $itemIndex }}'] = true;
+                    @endif
+                @endforeach
             @endforeach
         },
         toggleSubmenu(groupIndex, itemIndex) {
             const key = groupIndex + '-' + itemIndex;
-            const newState = !this.openSubmenus[key];
-
-            // Close all other submenus when opening a new one
-            if (newState) {
-                this.openSubmenus = {};
-            }
-
-            this.openSubmenus[key] = newState;
+            this.openSubmenus[key] = !this.openSubmenus[key];
         },
         isSubmenuOpen(groupIndex, itemIndex) {
             const key = groupIndex + '-' + itemIndex;
             return this.openSubmenus[key] || false;
-        },
-        isActive(path) {
-            return window.location.pathname === path || '{{ $currentPath }}' === path.replace(/^\//, '');
         }
     }"
     :class="{
@@ -63,15 +45,17 @@
         :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ?
         'xl:justify-center' :
         'justify-start'">
-        <a href="/">
+        <a href="/" class="flex items-center gap-3">
             <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
-                class="dark:hidden" src="/images/logo/logo.svg" alt="Logo" width="150" height="40" />
+                class="dark:hidden h-8 w-auto" src="/images/logo/logoksr.png" alt="Logo" />
             <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
-                class="hidden dark:block" src="/images/logo/logo-dark.svg" alt="Logo" width="150"
-                height="40" />
+                class="hidden dark:block h-8 w-auto" src="/images/logo/logoksr.png" alt="Logo" />
             <img x-show="!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen"
-                src="/images/logo/logo-icon.svg" alt="Logo" width="32" height="32" />
-
+                class="h-7 w-7" src="/images/logo/logoksr.png" alt="Logo" />
+            <span x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+                class="text-lg font-semibold text-gray-800 dark:text-white/90">
+                {{ config('app.name', 'Dashboard') }}
+            </span>
         </a>
     </div>
 
@@ -101,19 +85,19 @@
                             @foreach ($menuGroup['items'] as $itemIndex => $item)
                                 <li>
                                     @if (isset($item['subItems']))
-                                        <!-- Menu Item with Submenu -->
-                                        <button @click="toggleSubmenu({{ $groupIndex }}, {{ $itemIndex }})"
-                                            class="menu-item group w-full"
-                                            :class="[
-                                                isSubmenuOpen({{ $groupIndex }}, {{ $itemIndex }}) ?
-                                                'menu-item-active' : 'menu-item-inactive',
-                                                !$store.sidebar.isExpanded && !$store.sidebar.isHovered ?
-                                                'xl:justify-center' : 'xl:justify-start'
-                                            ]">
+                                        @php
+                                            $parentActive = collect($item['subItems'])->contains(function ($subItem) {
+                                                return request()->is(ltrim($subItem['path'], '/'));
+                                            });
+                                        @endphp
+                                        <!-- Parent Menu -->
+                                        <button
+                                            @click="toggleSubmenu({{ $groupIndex }}, {{ $itemIndex }})"
+                                            class="menu-item group w-full {{ $parentActive ? 'menu-item-active' : 'menu-item-inactive' }}"
+                                        >
 
                                             <!-- Icon -->
-                                            <span :class="isSubmenuOpen({{ $groupIndex }}, {{ $itemIndex }}) ?
-                                                    'menu-item-icon-active' : 'menu-item-icon-inactive'">
+                                            <span class="{{ $parentActive ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
                                                 {!! MenuHelper::getIconSvg($item['icon']) !!}
                                             </span>
 
@@ -124,9 +108,7 @@
                                                 {{ $item['name'] }}
                                                 @if (!empty($item['new']))
                                                     <span class="absolute right-10"
-                                                        :class="isActive('{{ $item['path'] ?? '' }}') ?
-                                                            'menu-dropdown-badge menu-dropdown-badge-active' :
-                                                            'menu-dropdown-badge menu-dropdown-badge-inactive'">
+                                                        class="{{ $parentActive ? 'menu-dropdown-badge menu-dropdown-badge-active' : 'menu-dropdown-badge menu-dropdown-badge-inactive' }}">
                                                         new
                                                     </span>
                                                 @endif
@@ -144,30 +126,32 @@
                                             </svg>
                                         </button>
 
-                                        <!-- Submenu -->
+                                        <!-- Child Menu -->
                                         <div x-show="isSubmenuOpen({{ $groupIndex }}, {{ $itemIndex }}) && ($store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen)">
                                             <ul class="mt-2 space-y-1 ml-9">
-                                                @foreach ($item['subItems'] as $subItem)
+                                                    @foreach ($item['subItems'] as $subItem)
+                                                        @php
+                                                            $subActive = request()->is(ltrim($subItem['path'], '/'));
+                                                        @endphp
                                                     <li>
-                                                        <a href="{{ $subItem['path'] }}" class="menu-dropdown-item"
-                                                            :class="isActive('{{ $subItem['path'] }}') ?
-                                                                'menu-dropdown-item-active' :
-                                                                'menu-dropdown-item-inactive'">
-                                                            {{ $subItem['name'] }}
+                                                        <a href="{{ $subItem['path'] }}"
+                                                            class="menu-dropdown-item {{ $subActive ? 'menu-dropdown-item-active' : 'menu-dropdown-item-inactive' }}">
+                                                            <span class="flex items-center gap-2">
+                                                                <span class="{{ $subActive ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
+                                                                    {!! MenuHelper::getIconSvg($subItem['icon'] ?? 'pages') !!}
+                                                                </span>
+                                                                {{ $subItem['name'] }}
+                                                            </span>
                                                             <span class="flex items-center gap-1 ml-auto">
                                                                 @if (!empty($subItem['new']))
                                                                     <span
-                                                                        :class="isActive('{{ $subItem['path'] }}') ?
-                                                                            'menu-dropdown-badge menu-dropdown-badge-active' :
-                                                                            'menu-dropdown-badge menu-dropdown-badge-inactive'">
+                                                                        class="{{ $subActive ? 'menu-dropdown-badge menu-dropdown-badge-active' : 'menu-dropdown-badge menu-dropdown-badge-inactive' }}">
                                                                         new
                                                                     </span>
                                                                 @endif
                                                                 @if (!empty($subItem['pro']))
                                                                     <span
-                                                                        :class="isActive('{{ $subItem['path'] }}') ?
-                                                                            'menu-dropdown-badge-pro menu-dropdown-badge-pro-active' :
-                                                                            'menu-dropdown-badge-pro menu-dropdown-badge-pro-inactive'">
+                                                                        class="{{ $subActive ? 'menu-dropdown-badge-pro menu-dropdown-badge-pro-active' : 'menu-dropdown-badge-pro menu-dropdown-badge-pro-inactive' }}">
                                                                         pro
                                                                     </span>
                                                                 @endif
@@ -180,18 +164,10 @@
                                     @else
                                         <!-- Simple Menu Item -->
                                         <a href="{{ $item['path'] }}" class="menu-item group"
-                                            :class="[
-                                                isActive('{{ $item['path'] }}') ? 'menu-item-active' :
-                                                'menu-item-inactive',
-                                                (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ?
-                                                'xl:justify-center' :
-                                                'justify-start'
-                                            ]">
+                                            class="{{ request()->is(ltrim($item['path'], '/')) ? 'menu-item-active' : 'menu-item-inactive' }}">
 
                                             <!-- Icon -->
-                                            <span
-                                                :class="isActive('{{ $item['path'] }}') ? 'menu-item-icon-active' :
-                                                    'menu-item-icon-inactive'">
+                                            <span class="{{ request()->is(ltrim($item['path'], '/')) ? 'menu-item-icon-active' : 'menu-item-icon-inactive' }}">
                                                 {!! MenuHelper::getIconSvg($item['icon']) !!}
                                             </span>
 

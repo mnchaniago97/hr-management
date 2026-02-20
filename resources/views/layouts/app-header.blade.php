@@ -49,9 +49,12 @@
             </button>
 
             <!-- Logo (mobile only) -->
-            <a href="/" class="xl:hidden">
-                <img class="dark:hidden" src="/images/logo/logo.svg" alt="Logo" />
-                <img class="hidden dark:block" src="/images/logo/logo-dark.svg" alt="Logo" />
+            <a href="/" class="xl:hidden flex items-center gap-2">
+                <img class="dark:hidden h-8 w-auto" src="/images/logo/logoksr.png" alt="Logo" />
+                <img class="hidden dark:block h-8 w-auto" src="/images/logo/logoksr.png" alt="Logo" />
+                <span class="text-sm font-semibold text-gray-800 dark:text-white/90">
+                    {{ config('app.name', 'Dashboard') }}
+                </span>
             </a>
 
             <!-- Application Menu Toggle (mobile only) -->

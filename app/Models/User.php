@@ -20,7 +20,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'nia',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +46,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    public function hasAnyRole(array $roles): bool
+    {
+        return in_array($this->role, $roles, true);
+    }
+
+    public function getPermissions(): array
+    {
+        return config('roles.roles.' . $this->role, []);
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return in_array($permission, $this->getPermissions(), true);
     }
 }

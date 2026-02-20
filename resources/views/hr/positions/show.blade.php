@@ -90,9 +90,6 @@
                     <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Nama</p>
                   </th>
                   <th class="px-5 py-3 text-left sm:px-6">
-                    <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Email</p>
-                  </th>
-                  <th class="px-5 py-3 text-left sm:px-6">
                     <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Status</p>
                   </th>
                 </tr>
@@ -103,7 +100,6 @@
                   <td class="px-5 py-4 text-theme-sm font-medium text-gray-800 dark:text-white/90 sm:px-6">
                     <a href="{{ route('hr.members.show', $member->id) }}" class="hover:text-primary">{{ $member->name }}</a>
                   </td>
-                  <td class="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400 sm:px-6">{{ $member->email }}</td>
                   <td class="px-5 py-4 text-theme-sm sm:px-6">
                     <span class="text-theme-xs inline-block rounded-full px-2 py-0.5 font-medium {{ $member->status === 'active' ? 'bg-green-50 text-green-700 dark:bg-green-500/15 dark:text-green-500' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300' }}">
                       {{ $member->status === 'active' ? 'Aktif' : $member->status }}

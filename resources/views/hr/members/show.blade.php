@@ -41,10 +41,6 @@
                   <p class="mt-1 text-sm font-medium text-gray-800 dark:text-white/90">{{ $member->name }}</p>
                 </div>
                 <div>
-                  <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Email</p>
-                  <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">{{ $member->email }}</p>
-                </div>
-                <div>
                   <p class="text-xs font-medium text-gray-500 dark:text-gray-400">NIA</p>
                   <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">{{ $member->profile->nia ?? '-' }}</p>
                 </div>
@@ -63,10 +59,6 @@
                 <div>
                   <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Tipe</p>
                   <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">{{ $member->member_type ?? '-' }}</p>
-                </div>
-                <div>
-                  <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Tanggal Gabung</p>
-                  <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">{{ optional($member->join_date)->format('d M Y') ?? '-' }}</p>
                 </div>
                 <div>
                   <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Status</p>
