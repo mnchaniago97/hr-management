@@ -15,7 +15,13 @@
     >
         @php
             $user = auth()->user();
-            $avatar = $user?->avatar ? asset('storage/avatars/' . $user->avatar) : null;
+            $avatar = null;
+            if ($user?->avatar) {
+                $avatarPath = \Illuminate\Support\Str::startsWith($user->avatar, ['avatars/', '/'])
+                    ? ltrim($user->avatar, '/')
+                    : 'avatars/' . $user->avatar;
+                $avatar = \Illuminate\Support\Facades\Storage::disk('public')->url($avatarPath);
+            }
             $initials = strtoupper(substr($user->name ?? 'U', 0, 2));
         @endphp
         <span class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gray-100 text-sm font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">

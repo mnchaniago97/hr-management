@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function showLogin(): View
     {
-        return view('pages.auth.signin', ['title' => 'Login']);
+        return view('pages.auth.login', ['title' => 'Login']);
     }
 
     public function login(Request $request): RedirectResponse

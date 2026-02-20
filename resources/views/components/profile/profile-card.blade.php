@@ -5,7 +5,13 @@
         $email = $user?->email ?? '-';
         $role = $user?->role ?? 'User';
         $nia = $user?->nia ?? '';
-        $avatar = $user?->avatar ? asset('storage/avatars/' . $user->avatar) : null;
+        $avatar = null;
+        if ($user?->avatar) {
+            $avatarPath = \Illuminate\Support\Str::startsWith($user->avatar, ['avatars/', '/'])
+                ? ltrim($user->avatar, '/')
+                : 'avatars/' . $user->avatar;
+            $avatar = \Illuminate\Support\Facades\Storage::disk('public')->url($avatarPath);
+        }
         $initials = collect(explode(' ', trim($name)))
             ->filter()
             ->map(fn ($part) => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($part, 0, 1)))

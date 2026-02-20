@@ -89,7 +89,7 @@ Route::prefix('admin')->name('admin.')->middleware('role:Super Admin')->group(fu
 });
 
 Route::get('/register', function () {
-    return view('pages.auth.signup', ['title' => 'Register']);
+    return view('pages.auth.register', ['title' => 'Register']);
 })->name('register');
 
     // UI elements pages

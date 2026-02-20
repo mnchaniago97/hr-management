@@ -18,14 +18,14 @@ class ProfileController extends Controller
         $user = $request->user();
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'nia' => 'nullable|string|max:50|unique:users,nia,' . $user->id,
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'country' => 'nullable|string|max:100',
-            'city_state' => 'nullable|string|max:150',
-            'postal_code' => 'nullable|string|max:20',
-            'tax_id' => 'nullable|string|max:50',
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
+            'nia' => 'sometimes|nullable|string|max:50|unique:users,nia,' . $user->id,
+            'avatar' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'country' => 'sometimes|nullable|string|max:100',
+            'city_state' => 'sometimes|nullable|string|max:150',
+            'postal_code' => 'sometimes|nullable|string|max:20',
+            'tax_id' => 'sometimes|nullable|string|max:50',
         ]);
 
         if ($request->hasFile('avatar')) {
