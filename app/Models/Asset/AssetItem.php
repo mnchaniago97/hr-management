@@ -54,6 +54,6 @@ class AssetItem extends Model
      */
     public function assetAssignments(): HasMany
     {
-        return $this->hasMany(AssetAssignment::class);
+        return $this->hasMany(AssetAssignment::class, 'item_id');
     }
 }
