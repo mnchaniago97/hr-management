@@ -74,7 +74,6 @@ class AssetAssignmentController extends Controller
      */
     public function publicForm(): View
     {
-        $members = Member::where('status', 'active')->orderBy('name')->get();
         $availableItems = AssetItem::where('status', 'available')
             ->where('condition', '!=', 'poor')
             ->orderBy('name')
@@ -82,7 +81,6 @@ class AssetAssignmentController extends Controller
 
         return view('public.asset-loan', [
             'title' => 'Peminjaman Aset',
-            'members' => $members,
             'availableItems' => $availableItems,
         ]);
     }
@@ -144,10 +142,15 @@ class AssetAssignmentController extends Controller
     {
         $validated = $request->validate([
             'item_id' => 'required|exists:asset_items,id',
-            'member_id' => 'required|exists:hr_members,id',
+            'borrower_name' => 'required|string|max:255',
+            'borrower_institution' => 'required|string|max:255',
+            'borrower_phone' => 'required|string|max:30',
+            'borrower_address' => 'required|string|max:255',
             'assignment_date' => 'required|date',
             'return_date' => 'required|date|after_or_equal:assignment_date',
             'notes' => 'nullable|string',
+            'request_letter' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
+            'id_card' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
         ]);
 
         $item = AssetItem::findOrFail($validated['item_id']);
@@ -157,25 +160,29 @@ class AssetAssignmentController extends Controller
                 ->withInput();
         }
 
-        $existingAssignment = AssetAssignment::where('item_id', $validated['item_id'])
-            ->where('member_id', $validated['member_id'])
-            ->where('status', 'borrowed')
-            ->exists();
-
-        if ($existingAssignment) {
-            return redirect()->back()
-                ->with('error', 'Aset ini masih dipinjam oleh anggota yang sama.')
-                ->withInput();
-        }
-
-        AssetAssignment::create([
+        $payload = [
             'item_id' => $validated['item_id'],
-            'member_id' => $validated['member_id'],
             'assignment_date' => $validated['assignment_date'],
             'return_date' => $validated['return_date'],
             'status' => 'borrowed',
             'notes' => $validated['notes'],
-        ]);
+            'borrower_name' => $validated['borrower_name'],
+            'borrower_institution' => $validated['borrower_institution'],
+            'borrower_phone' => $validated['borrower_phone'],
+            'borrower_address' => $validated['borrower_address'],
+        ];
+
+        if ($request->hasFile('request_letter')) {
+            $payload['request_letter_path'] = $request->file('request_letter')
+                ->store('asset-requests', 'public');
+        }
+
+        if ($request->hasFile('id_card')) {
+            $payload['id_card_path'] = $request->file('id_card')
+                ->store('asset-requests', 'public');
+        }
+
+        AssetAssignment::create($payload);
 
         $item->update(['status' => 'borrowed']);
 

@@ -25,6 +25,12 @@ class AssetAssignment extends Model
     protected $fillable = [
         'item_id',
         'member_id',
+        'borrower_name',
+        'borrower_institution',
+        'borrower_phone',
+        'borrower_address',
+        'request_letter_path',
+        'id_card_path',
         'assignment_date',
         'return_date',
         'actual_return_date',

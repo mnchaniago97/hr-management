@@ -1,22 +1,25 @@
 @extends('layouts.fullscreen-layout')
 
 @section('content')
-    <div class="relative z-1 bg-white p-6 sm:p-0 dark:bg-gray-900">
-        <div class="relative flex h-screen w-full flex-col justify-center sm:p-0 lg:flex-row dark:bg-gray-900">
+    <div class="relative z-1 min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 p-4 sm:p-6 dark:from-gray-950 dark:via-gray-900 dark:to-slate-950">
+        <div class="relative flex min-h-screen w-full flex-col justify-center py-8 sm:p-0 lg:flex-row lg:items-stretch lg:py-0 dark:bg-gray-900">
             <!-- Form -->
-            <div class="flex w-full flex-1 flex-col lg:w-1/2">
-                <div class="mx-auto w-full max-w-md pt-10">
+            <div class="flex w-full flex-1 flex-col lg:w-1/2 lg:min-h-screen lg:justify-center">
+                <div class="mx-auto w-full max-w-md">
                     <a href="/"
                         class="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
                         <svg class="stroke-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M12.7083 5L7.5 10.2083L12.7083 15.4167" stroke="" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                        Back to dashboard
+                        Back to home
                     </a>
                 </div>
-                <div class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
-                    <div>
-                        <div class="mb-5 sm:mb-8">
+                <div class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center lg:py-10">
+                    <div class="mb-6 mt-6 flex flex-col items-center gap-3 text-center sm:mt-8">
+                        <span class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
+                            <img src="/images/logo/logoksr.png" alt="Logo" class="h-10 w-auto" />
+                        </span>
+                        <div>
                             <h1 class="text-title-sm sm:text-title-md mb-2 font-semibold text-gray-800 dark:text-white/90">
                                 Login
                             </h1>
@@ -24,11 +27,12 @@
                                 Masuk dulu. Jika belum punya akun, buat akun terlebih dahulu.
                             </p>
                         </div>
-                        <div>
-                            <form method="POST" action="{{ route('login.submit') }}">
-                                @csrf
-                                <div class="space-y-5">
-                                    @if ($errors->any())
+                    </div>
+                    <div class="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-900/80">
+                        <form method="POST" action="{{ route('login.submit') }}">
+                            @csrf
+                            <div class="space-y-5">
+                                @if ($errors->any())
                                         <div class="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400">
                                             <ul class="list-disc space-y-1 pl-4">
                                                 @foreach ($errors->all() as $error)
@@ -102,18 +106,17 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="mt-5">
-                                <p class="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
-                                    Belum punya akun?
-                                    <a href="/register" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">Register</a>
-                                </p>
-                            </div>
+                        <div class="mt-5">
+                            <p class="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
+                                Belum punya akun?
+                                <a href="/register" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">Register</a>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-brand-500 relative hidden h-full w-full items-center lg:grid lg:w-1/2 dark:bg-brand-600/30">
+            <div class="bg-brand-500 relative hidden h-full w-full items-center lg:grid lg:w-1/2 lg:min-h-screen dark:bg-brand-600/30">
                 <div class="z-1 flex items-center justify-center">
                     <!-- ===== Common Grid Shape Start ===== -->
                     <x-common.common-grid-shape/>

@@ -9,11 +9,17 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Hr\MemberSelfServiceController;
+use App\Http\Controllers\HealthServiceRequestController;
+
+// Public home
+Route::get('/', function () {
+    return view('pages.public.home', ['title' => 'Beranda']);
+})->name('public.home');
 
 // Dashboard (auth only)
 Route::middleware('auth')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.home');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/home', [DashboardController::class, 'index'])->name('dashboard.home');
 });
 
 // Public attendance
@@ -24,6 +30,8 @@ Route::post('/attendance/check-out', [AttendanceController::class, 'quickCheckOu
 // Public asset loan
 Route::get('/asset-loan', [AssetAssignmentController::class, 'publicForm'])->name('asset.public.loan');
 Route::post('/asset-loan', [AssetAssignmentController::class, 'publicStore'])->name('asset.public.loan.store');
+Route::get('/health-service', [HealthServiceRequestController::class, 'publicForm'])->name('health.public.form');
+Route::post('/health-service', [HealthServiceRequestController::class, 'publicStore'])->name('health.public.store');
 
 // Protected routes
 Route::middleware('auth')->group(function () {
@@ -96,6 +104,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/videos', function () {
         return view('pages.ui-elements.videos', ['title' => 'Videos']);
     })->name('videos');
+
+    Route::get('/health-services/requests', [HealthServiceRequestController::class, 'index'])->name('health.requests.index');
+    Route::post('/health-services/requests/{id}/status', [HealthServiceRequestController::class, 'updateStatus'])
+        ->whereNumber('id')
+        ->name('health.requests.update-status');
 });
 
 // Authentication pages
