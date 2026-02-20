@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function showLogin(): View
     {
-        return view('pages.auth.signin', ['title' => 'Sign In']);
+        return view('pages.auth.signin', ['title' => 'Login']);
     }
 
     public function login(Request $request): RedirectResponse
@@ -41,6 +41,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('signin');
+        return redirect()->route('login');
     }
 }

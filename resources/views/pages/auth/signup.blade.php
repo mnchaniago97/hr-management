@@ -17,7 +17,7 @@
                 <div class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
                     <div class="mb-5 sm:mb-8">
                         <h1 class="text-title-sm sm:text-title-md mb-2 font-semibold text-gray-800 dark:text-white/90">
-                            Sign Up
+                            Register
                         </h1>
                         <p class="text-sm text-gray-500 dark:text-gray-400">
                             Enter your email and password to sign up!
@@ -114,8 +114,8 @@
                         </form>
                         <div class="mt-5">
                             <p class="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
-                                Already have an account?
-                                <a href="/signin" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">Sign In</a>
+                                Sudah punya akun?
+                                <a href="/login" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">Login</a>
                             </p>
                         </div>
                     </div>

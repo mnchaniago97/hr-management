@@ -18,14 +18,14 @@
                     <div>
                         <div class="mb-5 sm:mb-8">
                             <h1 class="text-title-sm sm:text-title-md mb-2 font-semibold text-gray-800 dark:text-white/90">
-                                Sign In
+                                Login
                             </h1>
                             <p class="text-sm text-gray-500 dark:text-gray-400">
                                 Masuk dulu. Jika belum punya akun, buat akun terlebih dahulu.
                             </p>
                         </div>
                         <div>
-                            <form method="POST" action="{{ route('signin.submit') }}">
+                            <form method="POST" action="{{ route('login.submit') }}">
                                 @csrf
                                 <div class="space-y-5">
                                     @if ($errors->any())
@@ -104,8 +104,8 @@
                             </form>
                             <div class="mt-5">
                                 <p class="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
-                                    Don't have an account?
-                                    <a href="/signup" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">Sign Up</a>
+                                    Belum punya akun?
+                                    <a href="/register" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">Register</a>
                                 </p>
                             </div>
                         </div>

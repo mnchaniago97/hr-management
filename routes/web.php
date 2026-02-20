@@ -78,8 +78,7 @@ Route::middleware('auth')->group(function () {
 
 // Authentication pages
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::get('/signin', [AuthController::class, 'showLogin'])->name('signin');
-Route::post('/signin', [AuthController::class, 'login'])->name('signin.submit');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Admin - User Management (Super Admin only)
@@ -89,9 +88,9 @@ Route::prefix('admin')->name('admin.')->middleware('role:Super Admin')->group(fu
     ])->whereNumber('id');
 });
 
-Route::get('/signup', function () {
-    return view('pages.auth.signup', ['title' => 'Sign Up']);
-})->name('signup');
+Route::get('/register', function () {
+    return view('pages.auth.signup', ['title' => 'Register']);
+})->name('register');
 
     // UI elements pages
     Route::get('/alerts', function () {
