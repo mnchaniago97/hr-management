@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Permohonan Layanan Kesehatan')
+
 @section('content')
 <div class="rounded-[28px] border border-white/70 bg-white/90 p-6 shadow-sm backdrop-blur">
   <div class="mb-6 flex flex-wrap items-center justify-between gap-3">

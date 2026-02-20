@@ -55,6 +55,13 @@ class MenuHelper
                 ],
             ],
             [
+                'icon' => 'support-ticket',
+                'name' => 'Layanan Kesehatan',
+                'subItems' => [
+                    ['name' => 'Permohonan Layanan', 'path' => '/health-services/requests', 'icon' => 'support-ticket'],
+                ],
+            ],
+            [
                 'icon' => 'settings',
                 'name' => 'Admin',
                 'role' => 'Super Admin',
