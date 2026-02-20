@@ -5,6 +5,7 @@
         $email = $user?->email ?? '-';
         $role = $user?->role ?? 'User';
         $nia = $user?->nia ?? '';
+        $avatar = $user?->avatar ? asset('uploads/avatars/' . $user->avatar) : null;
         $initials = collect(explode(' ', trim($name)))
             ->filter()
             ->map(fn ($part) => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($part, 0, 1)))
@@ -14,8 +15,12 @@
     <div class="mb-6 rounded-2xl border border-gray-200 p-5 lg:p-6 dark:border-gray-800">
         <div class="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
             <div class="flex w-full flex-col items-center gap-6 xl:flex-row">
-                <div class="flex h-20 w-20 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-xl font-semibold text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100">
-                    {{ $initials }}
+                <div class="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-gray-200 bg-gray-50 text-xl font-semibold text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100">
+                    @if ($avatar)
+                        <img src="{{ $avatar }}" alt="Avatar" class="h-full w-full object-cover" />
+                    @else
+                        {{ $initials }}
+                    @endif
                 </div>
                 <div class="order-3 xl:order-2">
                     <h4 class="mb-2 text-center text-lg font-semibold text-gray-800 xl:text-left dark:text-white/90">
@@ -98,7 +103,7 @@
                     Update your details to keep your profile up-to-date.
                 </p>
             </div>
-            <form class="flex flex-col" method="POST" action="{{ route('profile.update') }}">
+            <form class="flex flex-col" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="px-2">
                     <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
@@ -124,6 +129,15 @@
                             </label>
                             <input type="text" name="nia" value="{{ old('nia', $nia) }}"
                                 class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                        </div>
+
+                        <div class="col-span-2">
+                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                Foto Avatar
+                            </label>
+                            <input type="file" name="avatar" accept="image/*"
+                                class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">JPEG/PNG/WEBP, maks 2MB.</p>
                         </div>
                     </div>
                 </div>

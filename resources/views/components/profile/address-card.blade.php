@@ -1,4 +1,11 @@
 <div>
+    @php
+        $user = auth()->user();
+        $country = $user?->country ?? '-';
+        $cityState = $user?->city_state ?? '-';
+        $postalCode = $user?->postal_code ?? '-';
+        $taxId = $user?->tax_id ?? '-';
+    @endphp
     <div class="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div>
@@ -7,24 +14,22 @@
                 <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
                     <div>
                         <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Country</p>
-                        <p class="text-sm font-medium text-gray-800 dark:text-white/90">-</p>
+                        <p class="text-sm font-medium text-gray-800 dark:text-white/90">{{ $country }}</p>
                     </div>
 
                     <div>
                         <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">City/State</p>
-                        <p class="text-sm font-medium text-gray-800 dark:text-white/90">-</p>
+                        <p class="text-sm font-medium text-gray-800 dark:text-white/90">{{ $cityState }}</p>
                     </div>
 
                     <div>
-                        <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                            Postal Code
-                        </p>
-                        <p class="text-sm font-medium text-gray-800 dark:text-white/90">-</p>
+                        <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">Postal Code</p>
+                        <p class="text-sm font-medium text-gray-800 dark:text-white/90">{{ $postalCode }}</p>
                     </div>
 
                     <div>
                         <p class="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">TAX ID</p>
-                        <p class="text-sm font-medium text-gray-800 dark:text-white/90">-</p>
+                        <p class="text-sm font-medium text-gray-800 dark:text-white/90">{{ $taxId }}</p>
                     </div>
                 </div>
             </div>
@@ -49,42 +54,43 @@
                     Edit Address
                 </h4>
                 <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-                    Fitur ini akan tersedia pada pembaruan berikutnya.
+                    Update your details to keep your profile up-to-date.
                 </p>
             </div>
-            <form class="flex flex-col">
+            <form class="flex flex-col" method="POST" action="{{ route('profile.update') }}">
+                @csrf
                 <div class="px-2 overflow-y-auto custom-scrollbar">
                     <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                         <div>
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                 Country
                             </label>
-                            <input type="text" value="" disabled
-                                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-400 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/30 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                            <input type="text" name="country" value="{{ old('country', $user->country) }}"
+                                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
                         </div>
 
                         <div>
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                 City/State
                             </label>
-                            <input type="text" value="" disabled
-                                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-400 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/30 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                            <input type="text" name="city_state" value="{{ old('city_state', $user->city_state) }}"
+                                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
                         </div>
 
                         <div>
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                 Postal Code
                             </label>
-                            <input type="text" value="" disabled
-                                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-400 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/30 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                            <input type="text" name="postal_code" value="{{ old('postal_code', $user->postal_code) }}"
+                                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
                         </div>
 
                         <div>
                             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                 TAX ID
                             </label>
-                            <input type="text" value="" disabled
-                                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-400 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/30 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                            <input type="text" name="tax_id" value="{{ old('tax_id', $user->tax_id) }}"
+                                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
                         </div>
                     </div>
                 </div>
@@ -92,6 +98,10 @@
                     <button @click="open = false" type="button"
                         class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
                         Close
+                    </button>
+                    <button type="submit"
+                        class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 sm:w-auto">
+                        Save Changes
                     </button>
                 </div>
             </form>
