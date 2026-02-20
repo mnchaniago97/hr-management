@@ -5,7 +5,7 @@
         $email = $user?->email ?? '-';
         $role = $user?->role ?? 'User';
         $nia = $user?->nia ?? '';
-        $avatar = $user?->avatar ? asset('uploads/avatars/' . $user->avatar) : null;
+        $avatar = $user?->avatar ? asset('storage/avatars/' . $user->avatar) : null;
         $initials = collect(explode(' ', trim($name)))
             ->filter()
             ->map(fn ($part) => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($part, 0, 1)))

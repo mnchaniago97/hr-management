@@ -15,7 +15,7 @@
     >
         @php
             $user = auth()->user();
-            $avatar = $user?->avatar ? asset('uploads/avatars/' . $user->avatar) : null;
+            $avatar = $user?->avatar ? asset('storage/avatars/' . $user->avatar) : null;
             $initials = strtoupper(substr($user->name ?? 'U', 0, 2));
         @endphp
         <span class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gray-100 text-sm font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">

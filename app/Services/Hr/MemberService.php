@@ -19,7 +19,6 @@ class MemberService
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('position', 'like', "%{$search}%");
             });
         }
@@ -55,7 +54,7 @@ class MemberService
         if (isset($data['photo'])) {
             // Delete old photo
             if ($member->photo) {
-                Storage::delete('public/members/' . $member->photo);
+                Storage::disk('public')->delete('members/' . $member->photo);
             }
             $data['photo'] = $this->handlePhotoUpload($data['photo']);
         }
@@ -70,7 +69,7 @@ class MemberService
     public function delete(Member $member): void
     {
         if ($member->photo) {
-            Storage::delete('public/members/' . $member->photo);
+            Storage::disk('public')->delete('members/' . $member->photo);
         }
         $member->delete();
     }
@@ -94,7 +93,7 @@ class MemberService
     private function handlePhotoUpload($photo): string
     {
         $filename = time() . '_' . $photo->getClientOriginalName();
-        $photo->storeAs('public/members', $filename);
+        $photo->storeAs('members', $filename, 'public');
         return $filename;
     }
 }

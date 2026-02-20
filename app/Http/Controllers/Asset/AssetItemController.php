@@ -92,7 +92,7 @@ class AssetItemController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $filename = time() . '_' . $image->getClientOriginalName();
-            $image->storeAs('public/items', $filename);
+            $image->storeAs('items', $filename, 'public');
             $validated['image'] = $filename;
         }
 
@@ -148,11 +148,11 @@ class AssetItemController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($item->image) {
-                \Storage::delete('public/items/' . $item->image);
+                \Storage::disk('public')->delete('items/' . $item->image);
             }
             $image = $request->file('image');
             $filename = time() . '_' . $image->getClientOriginalName();
-            $image->storeAs('public/items', $filename);
+            $image->storeAs('items', $filename, 'public');
             $validated['image'] = $filename;
         }
 
@@ -178,7 +178,7 @@ class AssetItemController extends Controller
 
         // Delete image if exists
         if ($item->image) {
-            \Storage::delete('public/items/' . $item->image);
+            \Storage::disk('public')->delete('items/' . $item->image);
         }
 
         $item->delete();

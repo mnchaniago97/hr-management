@@ -94,7 +94,7 @@ class MemberController extends Controller
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
             $filename = time() . '_' . $photo->getClientOriginalName();
-            $photo->storeAs('public/members', $filename);
+            $photo->storeAs('members', $filename, 'public');
             $validated['photo'] = $filename;
         }
 
@@ -187,11 +187,11 @@ class MemberController extends Controller
         if ($request->hasFile('photo')) {
             // Delete old photo if exists
             if ($member->photo) {
-                \Storage::delete('public/members/' . $member->photo);
+                \Storage::disk('public')->delete('members/' . $member->photo);
             }
             $photo = $request->file('photo');
             $filename = time() . '_' . $photo->getClientOriginalName();
-            $photo->storeAs('public/members', $filename);
+            $photo->storeAs('members', $filename, 'public');
             $validated['photo'] = $filename;
         }
 
@@ -222,7 +222,7 @@ class MemberController extends Controller
 
         // Delete photo if exists
         if ($member->photo) {
-            \Storage::delete('public/members/' . $member->photo);
+            \Storage::disk('public')->delete('members/' . $member->photo);
         }
 
         $member->delete();

@@ -112,11 +112,12 @@ class Document extends Model
      */
     public function getFileSizeFormattedAttribute(): string
     {
-        if (!file_exists(public_path($this->file_path))) {
+        $path = \Storage::disk('public')->path($this->file_path);
+        if (!file_exists($path)) {
             return 'File not found';
         }
 
-        $bytes = filesize(public_path($this->file_path));
+        $bytes = filesize($path);
 
         if ($bytes >= 1073741824) {
             return number_format($bytes / 1073741824, 2) . ' GB';

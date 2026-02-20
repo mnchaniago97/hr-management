@@ -62,7 +62,7 @@ class AssetItemService
     {
         if (isset($data['image'])) {
             if ($item->image) {
-                Storage::delete('public/items/' . $item->image);
+                Storage::disk('public')->delete('items/' . $item->image);
             }
             $data['image'] = $this->handleImageUpload($data['image']);
         }
@@ -81,7 +81,7 @@ class AssetItemService
         }
 
         if ($item->image) {
-            Storage::delete('public/items/' . $item->image);
+            Storage::disk('public')->delete('items/' . $item->image);
         }
 
         $item->delete();
@@ -119,7 +119,7 @@ class AssetItemService
     private function handleImageUpload($image): string
     {
         $filename = time() . '_' . $image->getClientOriginalName();
-        $image->storeAs('public/items', $filename);
+        $image->storeAs('items', $filename, 'public');
         return $filename;
     }
 }

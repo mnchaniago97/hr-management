@@ -31,16 +31,13 @@ class ProfileController extends Controller
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $filename = 'avatar_' . $user->id . '_' . time() . '.' . $avatar->getClientOriginalExtension();
-            if (!is_dir(public_path('uploads/avatars'))) {
-                @mkdir(public_path('uploads/avatars'), 0755, true);
-            }
-            $avatar->move(public_path('uploads/avatars'), $filename);
+            $path = $avatar->storeAs('avatars', $filename, 'public');
 
-            if ($user->avatar && file_exists(public_path('uploads/avatars/' . $user->avatar))) {
-                @unlink(public_path('uploads/avatars/' . $user->avatar));
+            if ($user->avatar) {
+                \Storage::disk('public')->delete('avatars/' . $user->avatar);
             }
 
-            $validated['avatar'] = $filename;
+            $validated['avatar'] = basename($path);
         }
 
         $user->update($validated);
