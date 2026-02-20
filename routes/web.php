@@ -12,7 +12,7 @@ use App\Http\Controllers\Hr\MemberSelfServiceController;
 
 // Dashboard
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.home');
 
 // Public attendance
 Route::get('/attendance', [AttendanceController::class, 'publicForm'])->name('attendance.public');
