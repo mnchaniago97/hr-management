@@ -52,29 +52,82 @@
         </div>
         @endif
 
-        <form method="POST" class="space-y-6" x-data="{ q: '' }">
+        <form method="POST" class="space-y-6" x-data='{
+          q: "",
+          open: false,
+          selectedId: "{{ old('member_id') }}",
+          members: @json(($members ?? collect())->map(fn($m) => ['id' => $m->id, 'name' => $m->name])->values()),
+          init() {
+            if (this.selectedId) {
+              const selected = this.members.find(m => String(m.id) === String(this.selectedId));
+              if (selected) this.q = selected.name;
+            }
+          },
+          get filtered() {
+            const q = this.q.trim().toLowerCase();
+            if (!q) return this.members;
+            return this.members.filter(m => m.name.toLowerCase().includes(q));
+          },
+          selectMember(member) {
+            this.selectedId = member.id;
+            this.q = member.name;
+            this.open = false;
+          }
+        }'>
           @csrf
           <div>
             <label class="mb-2 block text-sm font-medium text-gray-700">Nama Anggota</label>
-            <input
-              type="text"
-              placeholder="Cari nama anggota..."
-              class="mb-2 w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#5a4cfe] focus:outline-none focus:ring-2 focus:ring-[#c7b9ff]/60"
-              x-model="q"
-            >
-            <select name="member_id" required
-              class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#5a4cfe] focus:outline-none focus:ring-2 focus:ring-[#c7b9ff]/60">
-              <option value="">Pilih anggota</option>
-              @foreach($members ?? [] as $member)
-                <option
-                  value="{{ $member->id }}"
-                  x-show="{{ json_encode($member->name) }}.toLowerCase().includes(q.toLowerCase())"
-                  {{ old('member_id') == $member->id ? 'selected' : '' }}
-                >
-                  {{ $member->name }}
-                </option>
-              @endforeach
-            </select>
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="Cari nama anggota..."
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#5a4cfe] focus:outline-none focus:ring-2 focus:ring-[#c7b9ff]/60"
+                x-model="q"
+                @focus="open = true"
+                @input="open = true; selectedId = ''"
+                @keydown.escape.window="open = false"
+                @click.away="open = false"
+                autocomplete="off"
+                aria-autocomplete="list"
+              >
+
+              <input type="hidden" name="member_id" x-model="selectedId" required>
+
+              <div
+                x-show="open"
+                x-transition
+                class="absolute z-10 mt-2 w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg"
+              >
+                <ul class="max-h-56 overflow-y-auto py-1 text-sm">
+                  <template x-for="member in filtered" :key="member.id">
+                    <li>
+                      <button
+                        type="button"
+                        class="w-full px-3 py-2 text-left hover:bg-gray-50"
+                        @click="selectMember(member)"
+                      >
+                        <span x-text="member.name"></span>
+                      </button>
+                    </li>
+                  </template>
+                  <li x-show="filtered.length === 0" class="px-3 py-2 text-xs text-gray-500">
+                    Nama tidak ditemukan.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <noscript>
+              <select name="member_id" required
+                class="mt-2 w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-[#5a4cfe] focus:outline-none focus:ring-2 focus:ring-[#c7b9ff]/60">
+                <option value="">Pilih anggota</option>
+                @foreach($members ?? [] as $member)
+                  <option value="{{ $member->id }}" {{ old('member_id') == $member->id ? 'selected' : '' }}>
+                    {{ $member->name }}
+                  </option>
+                @endforeach
+              </select>
+            </noscript>
           </div>
 
           <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
