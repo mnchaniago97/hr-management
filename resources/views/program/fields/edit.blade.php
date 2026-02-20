@@ -11,12 +11,12 @@
           <h2 class="text-xl font-semibold text-black dark:text-white">Ubah Bidang Program</h2>
           <p class="text-sm text-gray-500 mt-1">Perbarui nama atau deskripsi bidang.</p>
         </div>
-        <a href="{{ route('program.fields.show', $field->id) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]">
+        <a href="{{ route('program.fields.show', $field) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]">
           Lihat Detail
         </a>
       </div>
 
-      <form action="{{ route('program.fields.update', $field->id) }}" method="POST" class="space-y-6">
+      <form action="{{ route('program.fields.update', $field) }}" method="POST" class="space-y-6">
         @csrf
         @method('PUT')
 
@@ -68,7 +68,7 @@
         </div>
 
         <div class="flex flex-wrap justify-end gap-3">
-          <a href="{{ route('program.fields.show', $field->id) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]">
+          <a href="{{ route('program.fields.show', $field) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]">
             Batal
           </a>
           <button type="submit" class="inline-flex items-center rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600">

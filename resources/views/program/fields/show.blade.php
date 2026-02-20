@@ -12,10 +12,10 @@
           <p class="text-sm text-gray-500 mt-1">Lihat detail bidang program.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <a href="{{ route('program.fields.edit', $field->id) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]">
+          <a href="{{ route('program.fields.edit', $field) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/[0.03]">
             Ubah
           </a>
-          <form action="{{ route('program.fields.destroy', $field->id) }}" method="POST">
+          <form action="{{ route('program.fields.destroy', $field) }}" method="POST">
             @csrf
             @method('DELETE')
             <button type="submit" class="inline-flex items-center rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-theme-xs hover:bg-red-600" onclick="return confirm('Hapus bidang ini?')">

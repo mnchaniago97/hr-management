@@ -3,22 +3,41 @@ export const initChartThree = () => {
     const chartElement = document.querySelector('#chartThree');
 
     if (chartElement) {
+        const labels = chartElement.dataset.chartLabels ? JSON.parse(chartElement.dataset.chartLabels) : [];
+        const attendanceSeries = chartElement.dataset.chartAttendance ? JSON.parse(chartElement.dataset.chartAttendance) : [];
+        const loanSeries = chartElement.dataset.chartLoans ? JSON.parse(chartElement.dataset.chartLoans) : [];
+        const healthSeries = chartElement.dataset.chartHealth ? JSON.parse(chartElement.dataset.chartHealth) : [];
+
+        const seriesMap = {
+            attendance: {
+                name: "Absensi",
+                data: attendanceSeries,
+                color: "#465FFF",
+            },
+            loans: {
+                name: "Peminjaman",
+                data: loanSeries,
+                color: "#F59E0B",
+            },
+            health: {
+                name: "Tim Kesehatan",
+                data: healthSeries,
+                color: "#8B5CF6",
+            },
+        };
+
+        const defaultKey = "attendance";
         const chartThreeOptions = {
             series: [{
-                name: "Sales",
-                data: [180, 190, 170, 160, 175, 165, 170, 205, 230, 210, 240, 235],
-            },
-            {
-                name: "Revenue",
-                data: [40, 30, 50, 40, 55, 40, 70, 100, 110, 120, 150, 140],
-            },
-            ],
+                name: seriesMap[defaultKey].name,
+                data: seriesMap[defaultKey].data,
+            }],
             legend: {
                 show: false,
                 position: "top",
                 horizontalAlign: "left",
             },
-            colors: ["#465FFF", "#9CB9FF"],
+            colors: [seriesMap[defaultKey].color],
             chart: {
                 fontFamily: "Outfit, sans-serif",
                 height: 310,
@@ -36,7 +55,7 @@ export const initChartThree = () => {
             },
             stroke: {
                 curve: "straight",
-                width: ["2", "2"],
+                width: ["2"],
             },
             markers: {
                 size: 0,
@@ -67,20 +86,7 @@ export const initChartThree = () => {
             },
             xaxis: {
                 type: "category",
-                categories: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
+                categories: labels,
                 axisBorder: {
                     show: false,
                 },
@@ -100,6 +106,31 @@ export const initChartThree = () => {
 
         const chart = new ApexCharts(chartElement, chartThreeOptions);
         chart.render();
+
+        const tabButtons = document.querySelectorAll('.chart-tab-btn');
+        tabButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const key = button.dataset.chartTab;
+                if (!seriesMap[key]) {
+                    return;
+                }
+
+                tabButtons.forEach((btn) => {
+                    btn.classList.remove('bg-white', 'shadow-theme-xs', 'text-gray-700', 'dark:bg-gray-800', 'dark:text-white');
+                    btn.classList.add('text-gray-500', 'dark:text-gray-400');
+                });
+                button.classList.add('bg-white', 'shadow-theme-xs', 'text-gray-700', 'dark:bg-gray-800', 'dark:text-white');
+                button.classList.remove('text-gray-500', 'dark:text-gray-400');
+
+                chart.updateOptions({
+                    colors: [seriesMap[key].color],
+                });
+                chart.updateSeries([{
+                    name: seriesMap[key].name,
+                    data: seriesMap[key].data,
+                }]);
+            });
+        });
         return chart;
     }
 }

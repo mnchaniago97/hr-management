@@ -326,6 +326,11 @@
       </div>
     </div>
 
+    <!-- Chart Overview -->
+    <div class="col-span-12">
+      <x-ecommerce.statistics-chart />
+    </div>
+
     <!-- Aktivitas Mendatang -->
     <div class="col-span-12 xl:col-span-6">
       <div class="rounded-sm border border-stroke bg-white px-5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">

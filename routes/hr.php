@@ -41,6 +41,7 @@ Route::prefix('hr')->name('hr.')->middleware('permission:hr.access')->group(func
     Route::resource('assignments', DivisionAssignmentController::class)->parameters([
         'assignments' => 'id'
     ]);
+    Route::get('/assignments/history', fn () => view('hr.assignments.history'))->name('assignments.history');
 
     // Attendance - /hr/attendance
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
@@ -71,6 +72,7 @@ Route::prefix('hr')->name('hr.')->middleware('permission:hr.access')->group(func
     Route::resource('recruitment', RecruitmentController::class)->parameters([
         'recruitment' => 'id'
     ]);
+    Route::get('/recruitment/selection', fn () => view('hr.recruitment.selection'))->name('recruitment.selection');
 
     // Trainings - /hr/trainings
     Route::resource('trainings', TrainingController::class)->parameters([

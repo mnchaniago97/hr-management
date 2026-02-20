@@ -8,12 +8,30 @@ use App\Models\Asset\AssetItem;
 use App\Models\Program\Program;
 use App\Models\Program\Activity;
 use App\Models\Program\Period;
+use App\Models\Asset\AssetAssignment;
+use App\Models\Hr\Attendance;
+use App\Models\HealthServiceRequest;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        $endDate = Carbon::today();
+        $startDate = $endDate->copy()->subDays(29);
+        $dateLabels = [];
+        $attendanceSeries = [];
+        $loanSeries = [];
+        $healthSeries = [];
+
+        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+            $label = $date->format('d M');
+            $dateLabels[] = $label;
+            $attendanceSeries[] = Attendance::whereDate('date', $date->toDateString())->count();
+            $loanSeries[] = AssetAssignment::whereDate('assignment_date', $date->toDateString())->count();
+            $healthSeries[] = HealthServiceRequest::whereDate('created_at', $date->toDateString())->count();
+        }
+
         // Get statistics
         $stats = [
             // HR Statistics
@@ -65,6 +83,12 @@ class DashboardController extends Controller
             'currentPeriod' => $currentPeriod,
             'upcomingActivities' => $upcomingActivities,
             'recentMembers' => $recentMembers,
+            'chartData' => [
+                'labels' => $dateLabels,
+                'attendance' => $attendanceSeries,
+                'loans' => $loanSeries,
+                'health' => $healthSeries,
+            ],
         ]);
     }
 }

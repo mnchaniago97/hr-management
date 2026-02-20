@@ -8,7 +8,7 @@
     <div class="rounded-sm border border-stroke bg-white px-5 py-6 shadow-default dark:border-strokedark dark:bg-boxdark">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-xl font-semibold text-black dark:text-white">Data Program Kerja</h2>
-        <a href="{{ route('program.programs.create') }}" class="inline-flex items-center rounded-md bg-primary px-4 py-2 text-white hover:bg-opacity-90">
+        <a href="{{ route('program.programs.create') }}" class="inline-flex items-center rounded-md bg-brand-500 px-4 py-2 text-white shadow-theme-xs hover:bg-brand-600">
           <svg class="mr-2" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
@@ -95,7 +95,15 @@
             <tbody id="programsTableBody">
               <tr class="border-b border-gray-100 dark:border-gray-800">
                 <td colspan="8" class="px-5 py-8 text-center text-theme-sm text-gray-500 dark:text-gray-400 sm:px-6">
-                  Data tidak tersedia. Silakan tambahkan data program terlebih dahulu.
+                  <div class="flex flex-col items-center gap-3">
+                    <p>Data tidak tersedia. Silakan tambahkan data program terlebih dahulu.</p>
+                    <a href="{{ route('program.programs.create') }}" class="inline-flex items-center rounded-md bg-brand-500 px-4 py-2 text-white shadow-theme-xs hover:bg-brand-600">
+                      <svg class="mr-2" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                      Tambah Program
+                    </a>
+                  </div>
                 </td>
               </tr>
             </tbody>

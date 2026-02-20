@@ -24,22 +24,22 @@ use App\Http\Controllers\Program\TrainingParticipantController;
 Route::prefix('program')->name('program.')->middleware('permission:program.access')->group(function () {
     // Periods - /program/periods
     Route::resource('periods', PeriodController::class)->parameters([
-        'periods' => 'id'
+        'periods' => 'period',
     ]);
 
     // Fields (Bidang) - /program/fields
     Route::resource('fields', FieldController::class)->parameters([
-        'fields' => 'id'
+        'fields' => 'field',
     ]);
 
     // Divisions - /program/divisions
     Route::resource('divisions', DivisionController::class)->parameters([
-        'divisions' => 'id'
+        'divisions' => 'division',
     ]);
 
     // Programs - /program/programs
     Route::resource('programs', ProgramController::class)->parameters([
-        'programs' => 'id'
+        'programs' => 'program',
     ]);
 
     // Program filters
@@ -49,7 +49,7 @@ Route::prefix('program')->name('program.')->middleware('permission:program.acces
 
     // Activities - /program/activities
     Route::resource('activities', ActivityController::class)->parameters([
-        'activities' => 'id'
+        'activities' => 'activity',
     ]);
     
     // Additional Activity Routes
@@ -58,7 +58,7 @@ Route::prefix('program')->name('program.')->middleware('permission:program.acces
 
     // Documents - /program/documents
     Route::resource('documents', DocumentController::class)->parameters([
-        'documents' => 'id'
+        'documents' => 'document',
     ]);
     
     // Additional Document Routes
@@ -66,7 +66,7 @@ Route::prefix('program')->name('program.')->middleware('permission:program.acces
 
     // Training - /program/training
     Route::resource('training', TrainingController::class)->parameters([
-        'training' => 'id'
+        'training' => 'training',
     ]);
 
     // Training participants
