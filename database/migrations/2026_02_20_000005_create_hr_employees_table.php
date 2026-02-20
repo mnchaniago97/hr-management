@@ -4,11 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHrMemberProfilesTable extends Migration
+class CreateHrEmployeesTable extends Migration
 {
     public function up(): void
     {
-        Schema::create('hr_member_profiles', function (Blueprint $table) {
+        Schema::create('hr_employees', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')->unique()->constrained('hr_members')->cascadeOnDelete();
             $table->string('nia', 50)->nullable()->unique();
@@ -19,6 +19,6 @@ class CreateHrMemberProfilesTable extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('hr_member_profiles');
+        Schema::dropIfExists('hr_employees');
     }
 }
